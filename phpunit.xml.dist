@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    bootstrap="./vendor/autoload.php"
+    backupGlobals="false">
+    <testsuites>
+        <testsuite name="minphp/Configure">
+            <directory suffix="Test.php">tests/Configure/</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/Configure/</directory>
+        </whitelist>
+    </filter>
+</phpunit>
