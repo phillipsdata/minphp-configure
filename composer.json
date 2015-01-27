@@ -17,6 +17,6 @@
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {
-        "psr-4": {"Configure\\": "src/Configure"}
+        "psr-4": {"minphp\\Configure\\": "src/Configure"}
     }
 }
