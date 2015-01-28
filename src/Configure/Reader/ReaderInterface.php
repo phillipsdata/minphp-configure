@@ -2,7 +2,9 @@
 namespace minphp\Configure\Reader;
 
 interface ReaderInterface
-{    
+{
+
+    
     /**
      * Parse the config file
      *
@@ -11,5 +13,4 @@ interface ReaderInterface
      * @throws ReaderParseException When the file can not be parsed
      */
     public function parse(\SplFileObject $file);
-    
 }

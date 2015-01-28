@@ -4,7 +4,8 @@ namespace minphp\Configure;
 /**
  * @coversDefaultClass \minphp\Configure\Configure
  */
-class ConfigureTest extends \PHPUnit_Framework_TestCase {
+class ConfigureTest extends \PHPUnit_Framework_TestCase
+{
     
     private $Configure;
     

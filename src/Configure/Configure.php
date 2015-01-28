@@ -1,5 +1,6 @@
 <?php
 namespace minphp\Configure;
+
 use minphp\Configure\Reader;
 use minphp\Configure\Exception\ConfigureLoadException;
 
@@ -48,7 +49,7 @@ class Configure
      *
      * @param mixed $key
      * @return mixed
-     */    
+     */
     public function get($key)
     {
         if ($this->exists($key)) {
@@ -62,7 +63,7 @@ class Configure
      *
      * @param mixed $key
      * @return boolean
-     */  
+     */
     public function exists($key)
     {
         return $this->data->offSetExists($key);
@@ -72,7 +73,7 @@ class Configure
      * Removes a value from the config
      *
      * @param mixed $key
-     */  
+     */
     public function free($key)
     {
         if ($this->exists($key)) {
