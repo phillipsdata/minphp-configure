@@ -21,10 +21,10 @@ class Configure
         
         switch ($type) {
             case "php":
-                $parser = new Reader\PhpReader($file);
+                $parser = new Reader\PhpReader();
                 break;
             case "json":
-                $parser = new Reader\JsonReader($file);
+                $parser = new Reader\JsonReader();
                 break;
             default:
                 throw new \InvalidArgumentException("Unrecognized type: " . $type);
@@ -51,7 +51,10 @@ class Configure
      */    
     public function get($key)
     {
-        $this->data->offsetGet($key);
+        if ($this->exists($key)) {
+            return $this->data->offsetGet($key);
+        }
+        return null;
     }
     
     /**
@@ -72,6 +75,8 @@ class Configure
      */  
     public function free($key)
     {
-        $this->data->offsetUnset($key);
+        if ($this->exists($key)) {
+            $this->data->offsetUnset($key);
+        }
     }
 }

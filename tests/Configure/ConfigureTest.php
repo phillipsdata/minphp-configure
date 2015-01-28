@@ -21,8 +21,9 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase {
      */
     private function loadConfig($data, $type)
     {
-        $config = new \SplTempFileObject();
+        $config = new \SplTempFileObject(0);
         $config->fwrite($data);
+        $config->rewind();
         
         $this->Configure->load($config, $type);
     }
