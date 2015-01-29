@@ -14,10 +14,18 @@ class Configure
      */
     protected $data;
     
+    /**
+     * Loads a config file
+     *
+     * @param \SplFileObject $file The config file to load
+     * @param Reader\ReaderInterface $reader The reader to use, default to auto-detect
+     * @throws ConfigureLoadException If the file is not valid
+     * @throws \UnexpectedValueException If $reader failed to return the expected type
+     */
     public function load(\SplFileObject $file, Reader\ReaderInterface $reader = null)
     {
         if (!$file->valid()) {
-            throw new ConfigureLoadException("Config file not readable.");
+            throw new ConfigureLoadException("Config file not valid.");
         }
         
         if (null === $reader) {
@@ -25,6 +33,10 @@ class Configure
         }
 
         $this->data = $reader->parse($file);
+        
+        if (!($this->data instanceof \ArrayIterator)) {
+            throw new \UnexpectedValueException(get_class($reader) . " returned an unexpected type.");
+        }
     }
     
     /**
@@ -91,7 +103,7 @@ class Configure
      *
      * @param mixed $key
      */
-    public function free($key)
+    public function remove($key)
     {
         if ($this->exists($key)) {
             $this->data->offsetUnset($key);

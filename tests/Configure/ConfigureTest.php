@@ -17,13 +17,13 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     /**
      * Load the configuration
      *
-     * @param string $data
+     * @param string $file_contents
      * @param \minphp\Configure\Reader\ReaderInterface $reader
      */
-    private function loadConfig($data, $reader)
+    protected function loadConfig($file_contents, $reader)
     {
         $config = new \SplTempFileObject(0);
-        $config->fwrite($data);
+        $config->fwrite($file_contents);
         $config->rewind();
         
         $this->Configure->load($config, $reader);
@@ -34,9 +34,10 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      * @covers ::get
      * @dataProvider keyProvider
      */
-    public function testSetGet($data, $reader, $keys)
+    public function testSetGet($file_contents, $data)
     {
-        $this->loadConfig($data, $reader);
+        $keys = array_keys($data);
+        $this->loadConfig($file_contents, $this->getReaderMock($data));
         
         foreach ($keys as $key) {
             $before = $this->Configure->get($key);
@@ -49,21 +50,22 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
-     * @covers ::free
+     * @covers ::remove
      * @covers ::exists
      * @dataProvider keyProvider
      */
-    public function testFree($data, $reader, $keys)
+    public function testRemove($file_contents, $data)
     {
-        $this->loadConfig($data, $reader);
+        $keys = array_keys($data);
+        $this->loadConfig($file_contents, $this->getReaderMock($data));
         
         foreach ($keys as $key) {
             $this->assertTrue($this->Configure->exists($key));
-            $this->Configure->free($key);
+            $this->Configure->remove($key);
             $this->assertFalse($this->Configure->exists($key));
         }
         
-        $this->Configure->free("key-not-in-the-set");
+        $this->Configure->remove("key-not-in-the-set");
     }
     
     /**
@@ -73,28 +75,18 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      */
     public function keyProvider()
     {
-        $data = $this->getConfigData();
-        $keys = array_keys($data);
-        
-        $reader = $this->getMockBuilder('minphp\Configure\Reader\ReaderInterface')
-            ->getMock();
-        
-        return array(
-            array(json_encode($data), $reader, $keys),
-            array("return " . var_export($data, true) . ";", $reader, $keys)
-        );
+        return $this->genericProvider(true);
     }
     
     /**
      * @covers ::load
      * @dataProvider loadProvider
-     * @param string $data The data that belongs in the config file
-     * @param string $type The type of config file
      */
-    public function testLoad($data, $type)
+    public function testLoad($file_contents, $data)
     {
-        $this->loadConfig($data, $type);
+        $this->loadConfig($file_contents, $this->getReaderMock($data));
     }
+    
     
     /**
      * Data provider for testLoad
@@ -103,17 +95,43 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      */
     public function loadProvider()
     {
-        $data = $this->getConfigData();
-        
-        return array(
-            array(json_encode($data), "json"),
-            array("return " . var_export($data, true) . ";", "php")
-        );
+        return $this->genericProvider();
     }
     
-    public function testErrorReporting()
+    /**
+     * Mocks a Reader with the given data
+     *
+     * @param array $data
+     */
+    protected function getReaderMock($data)
     {
+        $reader = $this->getMockBuilder('\minphp\Configure\Reader\ReaderInterface')
+            ->setMethods(array('parse'))
+            ->getMock();
+            
+        $reader->expects($this->once())
+            ->method('parse')
+            ->will($this->returnValue(new \ArrayIterator($data)));
+            
+        return $reader;
+    }
+    
+    /**
+     * Generic data provider for Configure
+     *
+     * @param boolean $with_keys
+     * @return array
+     */
+    protected function genericProvider()
+    {
+        $data = $this->getConfigData();
         
+        $params = array(
+            array(json_encode($data), $data),
+            array("return " . var_export($data, true) . ";", $data)
+        );
+        
+        return $params;
     }
     
     /**
@@ -121,7 +139,7 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    private function getConfigData()
+    protected function getConfigData()
     {
         return array(
             'key1' => "value1",
