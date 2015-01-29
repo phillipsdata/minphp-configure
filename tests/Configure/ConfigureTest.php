@@ -18,15 +18,15 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      * Load the configuration
      *
      * @param string $data
-     * @param string $type
+     * @param \minphp\Configure\Reader\ReaderInterface $reader
      */
-    private function loadConfig($data, $type)
+    private function loadConfig($data, $reader)
     {
         $config = new \SplTempFileObject(0);
         $config->fwrite($data);
         $config->rewind();
         
-        $this->Configure->load($config, $type);
+        $this->Configure->load($config, $reader);
     }
     
     /**
@@ -34,9 +34,9 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      * @covers ::get
      * @dataProvider keyProvider
      */
-    public function testSetGet($data, $type, $keys)
+    public function testSetGet($data, $reader, $keys)
     {
-        $this->loadConfig($data, $type);
+        $this->loadConfig($data, $reader);
         
         foreach ($keys as $key) {
             $before = $this->Configure->get($key);
@@ -53,9 +53,9 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      * @covers ::exists
      * @dataProvider keyProvider
      */
-    public function testFree($data, $type, $keys)
+    public function testFree($data, $reader, $keys)
     {
-        $this->loadConfig($data, $type);
+        $this->loadConfig($data, $reader);
         
         foreach ($keys as $key) {
             $this->assertTrue($this->Configure->exists($key));
@@ -76,9 +76,12 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
         $data = $this->getConfigData();
         $keys = array_keys($data);
         
+        $reader = $this->getMockBuilder('minphp\Configure\Reader\ReaderInterface')
+            ->getMock();
+        
         return array(
-            array(json_encode($data), "json", $keys),
-            array("return " . var_export($data, true) . ";", "php", $keys)
+            array(json_encode($data), $reader, $keys),
+            array("return " . var_export($data, true) . ";", $reader, $keys)
         );
     }
     

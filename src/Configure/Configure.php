@@ -14,23 +14,40 @@ class Configure
      */
     protected $data;
     
-    public function load(\SplFileObject $file, $type)
+    public function load(\SplFileObject $file, Reader\ReaderInterface $reader = null)
     {
         if (!$file->valid()) {
             throw new ConfigureLoadException("Config file not readable.");
         }
         
+        if (null === $reader) {
+            $reader = $this->createReader($file->getExtension());
+        }
+
+        $this->data = $reader->parse($file);
+    }
+    
+    /**
+     * Factory for generating config readers
+     *
+     * @param string $type The type of config file
+     * @return \minphp\Configure\Reader\ReaderInterface
+     */
+    public function createReader($type)
+    {
+        $reader = null;
+        
         switch ($type) {
             case "php":
-                $parser = new Reader\PhpReader();
+                $reader = new Reader\PhpReader();
                 break;
             case "json":
-                $parser = new Reader\JsonReader();
+                $reader = new Reader\JsonReader();
                 break;
             default:
                 throw new \InvalidArgumentException("Unrecognized type: " . $type);
         }
-        $this->data = $parser->parse($file);
+        return $reader;
     }
     
     /**
