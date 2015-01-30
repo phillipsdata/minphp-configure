@@ -1,6 +1,8 @@
 <?php
 namespace minphp\Configure\Reader;
 
+use minphp\Configure\Reader\Exception\ReaderParseException;
+
 interface ReaderInterface
 {
 
