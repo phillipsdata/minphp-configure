@@ -3,6 +3,11 @@ namespace minphp\Configure\Reader;
 
 use minphp\Configure\Reader\Exception\ReaderParseException;
 
+/**
+ * JSON Reader
+ *
+ * Reads JSON config files.
+ */
 class JsonReader implements ReaderInterface
 {
     /**
