@@ -22,14 +22,10 @@ class Configure
      * @throws ConfigureLoadException If the file is not valid
      * @throws \UnexpectedValueException If $reader failed to return the expected type
      */
-    public function load(\SplFileObject $file, Reader\ReaderInterface $reader = null)
+    public function load(\SplFileObject $file, Reader\ReaderInterface $reader)
     {
         if (!$file->valid()) {
             throw new ConfigureLoadException("Config file not valid.");
-        }
-        
-        if (null === $reader) {
-            $reader = $this->createReader($file->getExtension());
         }
 
         $this->data = $reader->parse($file);
@@ -37,29 +33,6 @@ class Configure
         if (!($this->data instanceof \ArrayIterator)) {
             throw new \UnexpectedValueException(get_class($reader) . " returned an unexpected type.");
         }
-    }
-    
-    /**
-     * Factory for generating config readers
-     *
-     * @param string $type The type of config file
-     * @return \minphp\Configure\Reader\ReaderInterface
-     */
-    public function createReader($type)
-    {
-        $reader = null;
-        
-        switch ($type) {
-            case "php":
-                $reader = new Reader\PhpReader();
-                break;
-            case "json":
-                $reader = new Reader\JsonReader();
-                break;
-            default:
-                throw new \InvalidArgumentException("Unrecognized type: " . $type);
-        }
-        return $reader;
     }
     
     /**

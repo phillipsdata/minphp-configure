@@ -87,6 +87,49 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
         $this->loadConfig($file_contents, $this->getReaderMock($data));
     }
     
+    /**
+     * @covers ::load
+     * @expectedException \minphp\Configure\Exception\ConfigureLoadException
+     */
+    public function testLoadConfigureLoadException()
+    {
+        $file = $this->getMockBuilder('\SplFileObject')
+            ->setConstructorArgs(array("php://temp"))
+            ->setMethods(array('valid'))
+            ->getMock();
+            
+        $file->method('valid')
+            ->will($this->returnValue(false));
+        
+        $reader = $this->getMockBuilder('\minphp\Configure\Reader\ReaderInterface')
+            ->getMock();
+        
+        $this->Configure->load($file, $reader);
+    }
+    
+    /**
+     * @covers ::load
+     * @expectedException \UnexpectedValueException
+     */
+    public function testLoadUnexpectedValueException()
+    {
+        $file = $this->getMockBuilder('\SplFileObject')
+            ->setConstructorArgs(array("php://temp"))
+            ->setMethods(array('valid'))
+            ->getMock();
+            
+        $file->method('valid')
+            ->will($this->returnValue(true));
+            
+        $reader = $this->getMockBuilder('\minphp\Configure\Reader\ReaderInterface')
+            ->setMethods(array('parse'))
+            ->getMock();
+        $reader->method('parse')
+            ->will($this->returnValue(false));
+            
+        $this->Configure->load($file, $reader);
+    }
+    
     
     /**
      * Data provider for testLoad
