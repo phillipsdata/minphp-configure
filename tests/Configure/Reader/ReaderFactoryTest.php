@@ -17,8 +17,8 @@ class ReaderFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateReader()
     {
-        $this->assertInstanceOf('\minphp\Configure\PhpReader', $this->ReaderFactory->createReader("php"));
-        $this->assertInstanceOf('\minphp\Configure\JsonReader', $this->ReaderFactory->createReader("json"));
+        $this->assertInstanceOf('\minphp\Configure\Reader\PhpReader', $this->ReaderFactory->createReader("php"));
+        $this->assertInstanceOf('\minphp\Configure\Reader\JsonReader', $this->ReaderFactory->createReader("json"));
     }
     
     /**
