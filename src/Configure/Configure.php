@@ -15,6 +15,14 @@ class Configure
     protected $data;
     
     /**
+     * Initialize
+     */
+    public function __construct()
+    {
+        $this->data = new \ArrayIterator();
+    }
+    
+    /**
      * Loads a config file
      *
      * @param \SplFileObject $file The config file to load
@@ -28,10 +36,14 @@ class Configure
             throw new ConfigureLoadException("Config file not valid.");
         }
 
-        $this->data = $reader->parse($file);
+        $data = $reader->parse($file);
         
-        if (!($this->data instanceof \ArrayIterator)) {
+        if (!($data instanceof \ArrayIterator)) {
             throw new \UnexpectedValueException(get_class($reader) . " returned an unexpected type.");
+        }
+        
+        foreach ($data as $key => $value) {
+            $this->set($key, $value);
         }
     }
     

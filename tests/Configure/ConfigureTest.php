@@ -15,6 +15,14 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
+     * @covers ::__construct
+     */
+    public function test__construct()
+    {
+        $this->assertInstanceOf("\minphp\Configure\Configure", $this->Configure);
+    }
+    
+    /**
      * Load the configuration
      *
      * @param string $file_contents
