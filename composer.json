@@ -18,6 +18,6 @@
         "squizlabs/php_codesniffer": "~2.2"
     },
     "autoload": {
-        "psr-4": {"minphp\\Configure\\": "src/Configure"}
+        "psr-4": {"minphp\\Configure\\": "src"}
     }
 }
