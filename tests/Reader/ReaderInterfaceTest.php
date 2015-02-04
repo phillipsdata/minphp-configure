@@ -7,16 +7,16 @@ namespace minphp\Configure\Reader;
 class ReaderInterfaceTest extends \PHPUnit_Framework_TestCase implements ReaderInterface
 {
     
-    public function parse(\SplFileObject $file)
+    public function getIterator()
     {
-        return new \ArrayIterator(array());
+        return new \ArrayIterator();
     }
     
     /**
-     * @covers ::parse
+     * @covers ::getIterator
      */
-    public function testParse()
+    public function testGetIterator()
     {
-        $this->assertInstanceOf("\ArrayIterator", $this->parse(new \SplTempFileObject()));
+        $this->assertInstanceOf("\ArrayIterator", $this->getIterator());
     }
 }

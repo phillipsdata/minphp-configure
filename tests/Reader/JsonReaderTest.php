@@ -6,31 +6,37 @@ namespace minphp\Configure\Reader;
  */
 class JsonReaderTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function setUp()
+    
+    /**
+     * @covers ::__construct
+     */
+    public function test__construct()
     {
-        $this->Reader = new JsonReader();
+        $this->assertInstanceOf("\minphp\Configure\Reader\ReaderInterface", new JsonReader(new \SplTempFileObject()));
     }
     
     /**
-     * @covers ::parse
+     * @covers ::getIterator
      */
-    public function testParse()
+    public function testGetIterator()
     {
         $file = $this->getFileMock(json_encode(array('key' => "value")));
+        $reader = new JsonReader($file);
         
-        $result = $this->Reader->parse($file);
+        $result = $reader->getIterator();
         $this->assertInstanceOf('\ArrayIterator', $result);
         $this->assertEquals("value", $result['key']);
     }
     
     /**
+     * @covers ::getIterator
      * @expectedException \minphp\Configure\Reader\Exception\ReaderParseException
      */
-    public function testParseException()
+    public function testGetIteratorException()
     {
         $file = $this->getFileMock("{malformed:}}");
-        $this->Reader->parse($file);
+        $reader = new JsonReader($file);
+        $reader->getIterator();
     }
     
     protected function getFileMock($data)

@@ -25,16 +25,11 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     /**
      * Load the configuration
      *
-     * @param string $file_contents
      * @param \minphp\Configure\Reader\ReaderInterface $reader
      */
-    protected function loadConfig($file_contents, $reader)
+    protected function loadConfig($reader)
     {
-        $config = new \SplTempFileObject(0);
-        $config->fwrite($file_contents);
-        $config->rewind();
-        
-        $this->Configure->load($config, $reader);
+        $this->Configure->load($reader);
     }
     
     /**
@@ -42,10 +37,10 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      * @covers ::get
      * @dataProvider keyProvider
      */
-    public function testSetGet($file_contents, $data)
+    public function testSetGet($data)
     {
         $keys = array_keys($data);
-        $this->loadConfig($file_contents, $this->getReaderMock($data));
+        $this->loadConfig($this->getReaderMock($data));
         
         foreach ($keys as $key) {
             $before = $this->Configure->get($key);
@@ -62,10 +57,10 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      * @covers ::exists
      * @dataProvider keyProvider
      */
-    public function testRemove($file_contents, $data)
+    public function testRemove($data)
     {
         $keys = array_keys($data);
-        $this->loadConfig($file_contents, $this->getReaderMock($data));
+        $this->loadConfig($this->getReaderMock($data));
         
         foreach ($keys as $key) {
             $this->assertTrue($this->Configure->exists($key));
@@ -90,29 +85,9 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      * @covers ::load
      * @dataProvider loadProvider
      */
-    public function testLoad($file_contents, $data)
+    public function testLoad($data)
     {
-        $this->loadConfig($file_contents, $this->getReaderMock($data));
-    }
-    
-    /**
-     * @covers ::load
-     * @expectedException \minphp\Configure\Exception\ConfigureLoadException
-     */
-    public function testLoadConfigureLoadException()
-    {
-        $file = $this->getMockBuilder('\SplFileObject')
-            ->setConstructorArgs(array("php://temp"))
-            ->setMethods(array('valid'))
-            ->getMock();
-            
-        $file->method('valid')
-            ->will($this->returnValue(false));
-        
-        $reader = $this->getMockBuilder('\minphp\Configure\Reader\ReaderInterface')
-            ->getMock();
-        
-        $this->Configure->load($file, $reader);
+        $this->loadConfig($this->getReaderMock($data));
     }
     
     /**
@@ -121,21 +96,13 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadUnexpectedValueException()
     {
-        $file = $this->getMockBuilder('\SplFileObject')
-            ->setConstructorArgs(array("php://temp"))
-            ->setMethods(array('valid'))
-            ->getMock();
-            
-        $file->method('valid')
-            ->will($this->returnValue(true));
-            
         $reader = $this->getMockBuilder('\minphp\Configure\Reader\ReaderInterface')
-            ->setMethods(array('parse'))
+            ->setMethods(array('getIterator'))
             ->getMock();
-        $reader->method('parse')
+        $reader->method('getIterator')
             ->will($this->returnValue(false));
             
-        $this->Configure->load($file, $reader);
+        $this->Configure->load($reader);
     }
     
     
@@ -157,11 +124,11 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     protected function getReaderMock($data)
     {
         $reader = $this->getMockBuilder('\minphp\Configure\Reader\ReaderInterface')
-            ->setMethods(array('parse'))
+            ->setMethods(array('getIterator'))
             ->getMock();
             
         $reader->expects($this->once())
-            ->method('parse')
+            ->method('getIterator')
             ->will($this->returnValue(new \ArrayIterator($data)));
             
         return $reader;
@@ -175,14 +142,9 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      */
     protected function genericProvider()
     {
-        $data = $this->getConfigData();
-        
-        $params = array(
-            array(json_encode($data), $data),
-            array("return " . var_export($data, true) . ";", $data)
+        return array(
+            array($this->getConfigData())
         );
-        
-        return $params;
     }
     
     /**

@@ -11,13 +11,28 @@ use minphp\Configure\Reader\Exception\ReaderParseException;
 class JsonReader implements ReaderInterface
 {
     /**
+     * @var \SplFileObject The file to load
+     */
+    protected $file;
+    
+    /**
+     * Prepare the config reader
+     *
+     * @param \SplFileObject $file
+     */
+    public function __construct(\SplFileObject $file)
+    {
+        $this->file = $file;
+    }
+    
+    /**
      * {@inheritdoc}
      */
-    public function parse(\SplFileObject $file)
+    public function getIterator()
     {
         $data = null;
-        while (!$file->eof()) {
-            $data .= $file->fgets();
+        while (!$this->file->eof()) {
+            $data .= $this->file->fgets();
         }
 
         $data = json_decode($data);

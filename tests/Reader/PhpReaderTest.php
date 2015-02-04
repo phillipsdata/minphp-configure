@@ -6,10 +6,13 @@ namespace minphp\Configure\Reader;
  */
 class PhpReaderTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function setUp()
+    
+    /**
+     * @covers ::__construct
+     */
+    public function test__construct()
     {
-        $this->Reader = new PhpReader();
+        $this->assertInstanceOf("\minphp\Configure\Reader\ReaderInterface", new PhpReader(new \SplTempFileObject()));
     }
     
     protected function getFixturePath()
@@ -18,13 +21,14 @@ class PhpReaderTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
-     * @covers ::parse
+     * @covers ::getIterator
      */
-    public function testParse()
+    public function testGetIterator()
     {
         $file = $this->getFileMock($this->getFixturePath() . "Config.php");
+        $reader = new PhpReader($file);
         
-        $result = $this->Reader->parse($file);
+        $result = $reader->getIterator($file);
         $this->assertInstanceOf('\ArrayIterator', $result);
         $this->assertEquals("value", $result['key']);
     }
@@ -32,10 +36,11 @@ class PhpReaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \minphp\Configure\Reader\Exception\ReaderParseException
      */
-    public function testParseException()
+    public function testGetIteratorException()
     {
         $file = $this->getFileMock(null);
-        $result = $this->Reader->parse($file);
+        $reader = new PhpReader($file);
+        $result = $reader->getIterator();
     }
     
     protected function getFileMock($filename)

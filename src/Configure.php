@@ -2,7 +2,6 @@
 namespace minphp\Configure;
 
 use minphp\Configure\Reader;
-use minphp\Configure\Exception\ConfigureLoadException;
 
 /**
  * Generic configuration library
@@ -25,21 +24,16 @@ class Configure
     /**
      * Loads a config file
      *
-     * @param \SplFileObject $file The config file to load
-     * @param Reader\ReaderInterface $reader The reader to use, default to auto-detect
+     * @param Reader\ReaderInterface $reader The reader to use
      * @throws ConfigureLoadException If the file is not valid
      * @throws \UnexpectedValueException If $reader failed to return the expected type
      */
-    public function load(\SplFileObject $file, Reader\ReaderInterface $reader)
+    public function load(Reader\ReaderInterface $reader)
     {
-        if (!$file->valid()) {
-            throw new ConfigureLoadException("Config file not valid.");
-        }
-
-        $data = $reader->parse($file);
+        $data = $reader->getIterator();
         
         if (!($data instanceof \ArrayIterator)) {
-            throw new \UnexpectedValueException(get_class($reader) . " returned an unexpected type.");
+            throw new \UnexpectedValueException(get_class($reader) . " failed to return an instance of \ArrayIterator.");
         }
         
         foreach ($data as $key => $value) {
