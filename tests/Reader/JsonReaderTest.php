@@ -10,7 +10,7 @@ class JsonReaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      */
-    public function test__construct()
+    public function testConstruct()
     {
         $this->assertInstanceOf("\minphp\Configure\Reader\ReaderInterface", new JsonReader(new \SplTempFileObject()));
     }

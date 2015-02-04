@@ -33,7 +33,9 @@ class Configure
         $data = $reader->getIterator();
         
         if (!($data instanceof \ArrayIterator)) {
-            throw new \UnexpectedValueException(get_class($reader) . " failed to return an instance of \ArrayIterator.");
+            throw new \UnexpectedValueException(
+                get_class($reader) . " failed to return an instance of \ArrayIterator."
+            );
         }
         
         foreach ($data as $key => $value) {

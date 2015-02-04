@@ -2,6 +2,14 @@
 
 A generic configuration library for getting and setting values for keys.
 
+## Installation
+
+Install via composer:
+
+```sh
+    composer install minphp/configure:~1.0
+```
+
 ## Basic Usage
 
 ```php
@@ -24,17 +32,15 @@ $config->get('key');
 
 Configure currently supports the following formats:
 
-- PHP (a file that reutrns an array or object supported by \ArrayIterator)
+- PHP (a file that returns an array or object supported by \ArrayIterator)
 - JSON
-
-### PhpReader
 
 **config.php**
 ```php
 <?php
 return array(
-    'key1' => "value",
-    'key2' => array('key' => "value")
+    'key1' => 'value',
+    'key2' => array('key' => 'value')
 );
 
 ```
@@ -54,22 +60,22 @@ use minphp\Configure\Configure;
 
 $config = new Configure();
 $config->load(new Reader\PhpReader(new \SplFileObject('config.php')));
-echo $config->get("key1"); // prints "value"
-echo $config->get("key2")['key']; // prints "value";
+echo $config->get('key1'); // prints "value"
+echo $config->get('key2')['key']; // prints "value";
 
 $config->load(new Reader\JsonReader(new \SplFileObject('config.json')));
 
-echo $config->get("key1"); // prints "value"
-echo $config->get("key2")->property; // prints "value";
+echo $config->get('key1'); // prints "value"
+echo $config->get('key2')->property; // prints "value";
 ```
 
-**Note** Configure won't mess with your data. JSON objects are returned as
+**Note:** Configure won't mess with your data. JSON objects are returned as
 actual objects, not hashes.
 
 A literal translation of the above config.json file would be:
 ```php
 return array(
-    'key' => "value",
-    'key2' => (object)array('key' => "value")
+    'key' => 'value',
+    'key2' => (object)array('key' => 'value')
 );
 ```

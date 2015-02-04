@@ -4,7 +4,8 @@ namespace minphp\Configure\Reader;
 use minphp\Configure\Reader\Exception\ReaderParseException;
 
 interface ReaderInterface
-{   
+{
+    
     /**
      * Return the config data as an \ArrayIterator
      *
