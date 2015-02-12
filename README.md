@@ -1,6 +1,6 @@
 # minphp/Configure
 
-[![Build Status](https://travis-ci.org/phillipsdata/minphp-configure.svg?branch=1.0.0)](https://travis-ci.org/phillipsdata/minphp-configure)
+[![Build Status](https://travis-ci.org/phillipsdata/minphp-configure.svg?branch=master)](https://travis-ci.org/phillipsdata/minphp-configure)
 
 A generic configuration library for getting and setting values for keys.
 
