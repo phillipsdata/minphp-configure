@@ -1,5 +1,7 @@
 # minphp/Configure
 
+[![Build Status](https://travis-ci.org/phillipsdata/minphp-configure.svg?branch=1.0.0)](https://travis-ci.org/phillipsdata/minphp-configure)
+
 A generic configuration library for getting and setting values for keys.
 
 ## Installation
@@ -7,7 +9,7 @@ A generic configuration library for getting and setting values for keys.
 Install via composer:
 
 ```sh
-    composer install minphp/configure:~1.0
+composer install minphp/configure:~1.0
 ```
 
 ## Basic Usage
