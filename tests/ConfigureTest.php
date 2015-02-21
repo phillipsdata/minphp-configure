@@ -35,6 +35,7 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::set
      * @covers ::get
+     * @uses \minphp\Configure\Configure
      * @dataProvider keyProvider
      */
     public function testSetGet($data)
@@ -55,6 +56,7 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::remove
      * @covers ::exists
+     * @uses \minphp\Configure\Configure
      * @dataProvider keyProvider
      */
     public function testRemove($data)
@@ -83,6 +85,7 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @covers ::load
+     * @uses \minphp\Configure\Configure
      * @dataProvider loadProvider
      */
     public function testLoad($data)
@@ -92,6 +95,7 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @covers ::load
+     * @uses \minphp\Configure\Configure
      * @expectedException \UnexpectedValueException
      */
     public function testLoadUnexpectedValueException()

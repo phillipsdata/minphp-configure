@@ -17,6 +17,7 @@ class JsonReaderTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @covers ::getIterator
+     * @uses \minphp\Configure\Reader\JsonReader
      */
     public function testGetIterator()
     {
@@ -30,6 +31,7 @@ class JsonReaderTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @covers ::getIterator
+     * @uses \minphp\Configure\Reader\JsonReader
      * @expectedException \minphp\Configure\Reader\Exception\ReaderParseException
      */
     public function testGetIteratorException()

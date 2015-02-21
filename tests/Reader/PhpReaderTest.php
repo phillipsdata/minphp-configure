@@ -22,6 +22,7 @@ class PhpReaderTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @covers ::getIterator
+     * @uses \minphp\Configure\Reader\PhpReader
      */
     public function testGetIterator()
     {
@@ -34,6 +35,8 @@ class PhpReaderTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
+     * @covers ::getIterator
+     * @uses \minphp\Configure\Reader\PhpReader
      * @expectedException \minphp\Configure\Reader\Exception\ReaderParseException
      */
     public function testGetIteratorException()
