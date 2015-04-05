@@ -9,7 +9,7 @@ A generic configuration library for getting and setting values for keys.
 Install via composer:
 
 ```sh
-composer install minphp/configure:~1.0
+composer require minphp/configure:~1.0
 ```
 
 ## Basic Usage
