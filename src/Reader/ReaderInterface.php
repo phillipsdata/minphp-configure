@@ -1,11 +1,11 @@
 <?php
-namespace minphp\Configure\Reader;
+namespace Minphp\Configure\Reader;
 
-use minphp\Configure\Reader\Exception\ReaderParseException;
+use Minphp\Configure\Reader\Exception\ReaderParseException;
 
 interface ReaderInterface
 {
-    
+
     /**
      * Return the config data as an \ArrayIterator
      *

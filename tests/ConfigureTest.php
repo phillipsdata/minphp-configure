@@ -1,78 +1,81 @@
 <?php
-namespace minphp\Configure;
+namespace Minphp\Configure\Tests;
+
+use PHPUnit_Framework_TestCase;
+use Minphp\Configure\Configure;
 
 /**
- * @coversDefaultClass \minphp\Configure\Configure
+ * @coversDefaultClass \Minphp\Configure\Configure
  */
-class ConfigureTest extends \PHPUnit_Framework_TestCase
+class ConfigureTest extends PHPUnit_Framework_TestCase
 {
-    
+
     private $Configure;
-    
+
     public function setUp()
     {
         $this->Configure = new Configure();
     }
-    
+
     /**
      * @covers ::__construct
      */
     public function testConstruct()
     {
-        $this->assertInstanceOf("\minphp\Configure\Configure", $this->Configure);
+        $this->assertInstanceOf("\Minphp\Configure\Configure", $this->Configure);
     }
-    
+
     /**
      * Load the configuration
      *
-     * @param \minphp\Configure\Reader\ReaderInterface $reader
+     * @param \Minphp\Configure\Reader\ReaderInterface $reader
      */
     protected function loadConfig($reader)
     {
         $this->Configure->load($reader);
     }
-    
+
     /**
      * @covers ::set
      * @covers ::get
-     * @uses \minphp\Configure\Configure
+     * @uses \Minphp\Configure\Configure
      * @dataProvider keyProvider
      */
     public function testSetGet($data)
     {
         $keys = array_keys($data);
         $this->loadConfig($this->getReaderMock($data));
-        
+
         foreach ($keys as $key) {
             $before = $this->Configure->get($key);
             $after = "hello world";
             $this->Configure->set($key, $after);
             $this->assertEquals($after, $this->Configure->get($key));
         }
-        
+
         $this->assertNull($this->Configure->get("key-not-in-the-set"));
     }
-    
+
     /**
      * @covers ::remove
      * @covers ::exists
-     * @uses \minphp\Configure\Configure
+     * @uses \Minphp\Configure\Configure
      * @dataProvider keyProvider
      */
     public function testRemove($data)
     {
         $keys = array_keys($data);
         $this->loadConfig($this->getReaderMock($data));
-        
+
         foreach ($keys as $key) {
             $this->assertTrue($this->Configure->exists($key));
             $this->Configure->remove($key);
             $this->assertFalse($this->Configure->exists($key));
         }
-        
+
         $this->Configure->remove("key-not-in-the-set");
     }
-    
+
     /**
      * Data provider for testFree, testGet, testSet
      *
@@ -82,34 +85,34 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     {
         return $this->genericProvider(true);
     }
-    
+
     /**
      * @covers ::load
-     * @uses \minphp\Configure\Configure
+     * @uses \Minphp\Configure\Configure
      * @dataProvider loadProvider
      */
     public function testLoad($data)
     {
         $this->loadConfig($this->getReaderMock($data));
     }
-    
+
     /**
      * @covers ::load
-     * @uses \minphp\Configure\Configure
+     * @uses \Minphp\Configure\Configure
      * @expectedException \UnexpectedValueException
      */
     public function testLoadUnexpectedValueException()
     {
-        $reader = $this->getMockBuilder('\minphp\Configure\Reader\ReaderInterface')
+        $reader = $this->getMockBuilder('\Minphp\Configure\Reader\ReaderInterface')
             ->setMethods(array('getIterator'))
             ->getMock();
         $reader->method('getIterator')
             ->will($this->returnValue(false));
-            
+
         $this->Configure->load($reader);
     }
-    
-    
+
+
     /**
      * Data provider for testLoad
      *
@@ -119,7 +122,7 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
     {
         return $this->genericProvider();
     }
-    
+
     /**
      * Mocks a Reader with the given data
      *
@@ -127,17 +130,17 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
      */
     protected function getReaderMock($data)
     {
-        $reader = $this->getMockBuilder('\minphp\Configure\Reader\ReaderInterface')
+        $reader = $this->getMockBuilder('\Minphp\Configure\Reader\ReaderInterface')
             ->setMethods(array('getIterator'))
             ->getMock();
-            
+
         $reader->expects($this->once())
             ->method('getIterator')
             ->will($this->returnValue(new \ArrayIterator($data)));
-            
+
         return $reader;
     }
-    
+
     /**
      * Generic data provider for Configure
      *
@@ -150,7 +153,7 @@ class ConfigureTest extends \PHPUnit_Framework_TestCase
             array($this->getConfigData())
         );
     }
-    
+
     /**
      * Sample config data
      *

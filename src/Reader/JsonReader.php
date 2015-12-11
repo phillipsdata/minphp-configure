@@ -1,7 +1,9 @@
 <?php
-namespace minphp\Configure\Reader;
+namespace Minphp\Configure\Reader;
 
-use minphp\Configure\Reader\Exception\ReaderParseException;
+use Minphp\Configure\Reader\Exception\ReaderParseException;
+use SplFileObject;
+use ArrayIterator;
 
 /**
  * JSON Reader
@@ -14,17 +16,17 @@ class JsonReader implements ReaderInterface
      * @var \SplFileObject The file to load
      */
     protected $file;
-    
+
     /**
      * Prepare the config reader
      *
      * @param \SplFileObject $file
      */
-    public function __construct(\SplFileObject $file)
+    public function __construct(SplFileObject $file)
     {
         $this->file = $file;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -41,6 +43,6 @@ class JsonReader implements ReaderInterface
             throw new ReaderParseException("Unable to parse JSON file.");
         }
 
-        return new \ArrayIterator($data);
+        return new ArrayIterator($data);
     }
 }

@@ -1,7 +1,9 @@
 <?php
-namespace minphp\Configure;
+namespace Minphp\Configure;
 
-use minphp\Configure\Reader;
+use Minphp\Configure\Reader;
+use ArrayIterator;
+use UnexpectedValueException;
 
 /**
  * Generic configuration library
@@ -12,15 +14,15 @@ class Configure
      * @var \ArrayIterator
      */
     protected $data;
-    
+
     /**
      * Initialize
      */
     public function __construct()
     {
-        $this->data = new \ArrayIterator();
+        $this->data = new ArrayIterator();
     }
-    
+
     /**
      * Loads a config file
      *
@@ -31,18 +33,18 @@ class Configure
     public function load(Reader\ReaderInterface $reader)
     {
         $data = $reader->getIterator();
-        
-        if (!($data instanceof \ArrayIterator)) {
-            throw new \UnexpectedValueException(
+
+        if (!($data instanceof ArrayIterator)) {
+            throw new UnexpectedValueException(
                 get_class($reader) . " failed to return an instance of \ArrayIterator."
             );
         }
-        
+
         foreach ($data as $key => $value) {
             $this->set($key, $value);
         }
     }
-    
+
     /**
      * Set a value in the config
      *
@@ -67,7 +69,7 @@ class Configure
         }
         return null;
     }
-    
+
     /**
      * Verify that a key exists
      *
@@ -78,7 +80,7 @@ class Configure
     {
         return $this->data->offSetExists($key);
     }
-    
+
     /**
      * Removes a value from the config
      *
