@@ -1,9 +1,12 @@
 <?php
-namespace minphp\Configure\Reader\Exception;
+namespace Minphp\Configure\Tests\Reader\Exception;
 
-class ReaderParseExceptionTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+use Minphp\Configure\Reader\Exception\ReaderParseException;
+
+class ReaderParseExceptionTest extends PHPUnit_Framework_TestCase
 {
-    
+
     public function testInstance()
     {
         $this->assertInstanceOf('Exception', new ReaderParseException('test'));

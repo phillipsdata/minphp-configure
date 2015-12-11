@@ -1,17 +1,21 @@
 <?php
-namespace minphp\Configure\Reader;
+namespace Minphp\Configure\Tests\Reader;
+
+use PHPUnit_Framework_TestCase;
+use Minphp\Configure\Reader\ReaderInterface;
+use ArrayIterator;
 
 /**
- * @coversDefaultClass \minphp\Configure\Reader\ReaderInterface
+ * @coversDefaultClass \Minphp\Configure\Reader\ReaderInterface
  */
-class ReaderInterfaceTest extends \PHPUnit_Framework_TestCase implements ReaderInterface
+class ReaderInterfaceTest extends PHPUnit_Framework_TestCase implements ReaderInterface
 {
-    
+
     public function getIterator()
     {
-        return new \ArrayIterator();
+        return new ArrayIterator();
     }
-    
+
     /**
      * @covers ::getIterator
      */

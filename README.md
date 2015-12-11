@@ -1,4 +1,4 @@
-# minphp/Configure
+# Minphp/Configure
 
 [![Build Status](https://travis-ci.org/phillipsdata/minphp-configure.svg?branch=master)](https://travis-ci.org/phillipsdata/minphp-configure) [![Coverage Status](https://coveralls.io/repos/phillipsdata/minphp-configure/badge.svg)](https://coveralls.io/r/phillipsdata/minphp-configure)
 
@@ -9,14 +9,14 @@ A generic configuration library for getting and setting values for keys.
 Install via composer:
 
 ```sh
-composer require minphp/configure:~1.0
+composer require minphp/configure:~2.0
 ```
 
 ## Basic Usage
 
 ```php
 <?php
-use minphp\Configure\Configure;
+use Minphp\Configure\Configure;
 
 $config = new Configure();
 $config->set('key', 'value');
@@ -58,7 +58,7 @@ return array(
 **usage.php**
 ```php
 <?php
-use minphp\Configure\Configure;
+use Minphp\Configure\Configure;
 
 $config = new Configure();
 $config->load(new Reader\PhpReader(new \SplFileObject('config.php')));

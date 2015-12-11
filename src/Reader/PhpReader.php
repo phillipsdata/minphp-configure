@@ -1,7 +1,9 @@
 <?php
-namespace minphp\Configure\Reader;
+namespace Minphp\Configure\Reader;
 
-use minphp\Configure\Reader\Exception\ReaderParseException;
+use Minphp\Configure\Reader\Exception\ReaderParseException;
+use ArrayIterator;
+use SplFileObject;
 
 /**
  * PHP Reader
@@ -15,17 +17,17 @@ class PhpReader implements ReaderInterface
      * @var \SplFileObject The file to load
      */
     protected $file;
-    
+
     /**
      * Prepare the config reader
      *
      * @param \SplFileObject $file
      */
-    public function __construct(\SplFileObject $file)
+    public function __construct(SplFileObject $file)
     {
         $this->file = $file;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -34,6 +36,6 @@ class PhpReader implements ReaderInterface
         if (!$this->file->isFile()) {
             throw new ReaderParseException("Invalid file.");
         }
-        return new \ArrayIterator(include_once $this->file->getPathname());
+        return new ArrayIterator(include_once $this->file->getPathname());
     }
 }

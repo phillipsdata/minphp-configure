@@ -1,10 +1,12 @@
 <?php
-namespace minphp\Configure\Reader\Exception;
+namespace Minphp\Configure\Reader\Exception;
+
+use Exception;
 
 /**
  * Reader Parse Exception
  */
-class ReaderParseException extends \Exception
+class ReaderParseException extends Exception
 {
-    
+
 }
