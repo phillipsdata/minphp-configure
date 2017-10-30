@@ -36,6 +36,6 @@ class PhpReader implements ReaderInterface
         if (!$this->file->isFile()) {
             throw new ReaderParseException("Invalid file.");
         }
-        return new ArrayIterator(include_once $this->file->getPathname());
+        return new ArrayIterator(include $this->file->getPathname());
     }
 }

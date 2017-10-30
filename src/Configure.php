@@ -2,7 +2,10 @@
 namespace Minphp\Configure;
 
 use Minphp\Configure\Reader;
+use Minphp\Configure\Reader\JsonReader;
+use Minphp\Configure\Reader\PhpReader;
 use ArrayIterator;
+use SplFileObject;
 use UnexpectedValueException;
 
 /**
@@ -26,17 +29,28 @@ class Configure
     /**
      * Loads a config file
      *
-     * @param Reader\ReaderInterface $reader The reader to use
+     * @param mixed $reader The reader to use or the path to the PHP/JSON file to load
+     *  i.e. an instance of Reader\ReaderInterface, or a *.(php/json) file
      * @throws ConfigureLoadException If the file is not valid
      * @throws \UnexpectedValueException If $reader failed to return the expected type
+     * @throws \Minphp\Configure\Reader\Exception\ReaderParseException If $reader failed to be parsed
      */
-    public function load(Reader\ReaderInterface $reader)
+    public function load($reader)
     {
-        $data = $reader->getIterator();
+        $data = null;
+
+        // Load the reader from string if given
+        if (is_string($reader)) {
+            $reader = $this->getReader($reader);
+        }
+
+        if ($reader instanceof Reader\ReaderInterface) {
+            $data = $reader->getIterator();
+        }
 
         if (!($data instanceof ArrayIterator)) {
             throw new UnexpectedValueException(
-                get_class($reader) . " failed to return an instance of \ArrayIterator."
+                (is_string($reader) ? $reader : get_class($reader)) . ' failed to return an instance of \ArrayIterator.'
             );
         }
 
@@ -91,5 +105,31 @@ class Configure
         if ($this->exists($key)) {
             $this->data->offsetUnset($key);
         }
+    }
+
+    /**
+     * Determines a reader from string
+     *
+     * @param string $filename The path to the file to load for the reader
+     * @return \Minphp\Configure\Reader\ReaderInterface An instance of the corresponding reader
+     */
+    private function getReader($filename)
+    {
+        // Determine the reader from the file path based on extension
+        if (($position = strrpos($filename, '.')) === false
+            || !in_array(($extension = strtolower(substr($filename, $position + 1))), array('php', 'json'))
+        ) {
+            throw new UnexpectedValueException(
+                $filename . ' is not a valid PHP or JSON file.'
+            );
+        }
+
+        $file = new SplFileObject($filename);
+
+        if ($extension === 'php') {
+            return new PhpReader($file);
+        }
+
+        return new JsonReader($file);
     }
 }

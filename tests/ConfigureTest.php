@@ -28,7 +28,7 @@ class ConfigureTest extends PHPUnit_Framework_TestCase
     /**
      * Load the configuration
      *
-     * @param \Minphp\Configure\Reader\ReaderInterface $reader
+     * @param mixed $reader The path to the file to load or an instance of \Minphp\Configure\Reader\ReaderInterface
      */
     protected function loadConfig($reader)
     {
@@ -88,12 +88,25 @@ class ConfigureTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::load
+     * @covers ::getReader
      * @uses \Minphp\Configure\Configure
+     * @uses \Minphp\Configure\Reader\PhpReader
+     * @uses \Minphp\Configure\Reader\JsonReader
      * @dataProvider loadProvider
      */
     public function testLoad($data)
     {
         $this->loadConfig($this->getReaderMock($data));
+
+        // Load config from filename
+        $paths = array(
+            $this->getFixturePath() . 'Config.php',
+            $this->getFixturePath() . 'Config.json'
+        );
+
+        foreach ($paths as $path) {
+            $this->loadConfig($path);
+        }
     }
 
     /**
@@ -112,6 +125,17 @@ class ConfigureTest extends PHPUnit_Framework_TestCase
         $this->Configure->load($reader);
     }
 
+    /**
+     * @covers ::load
+     * @covers ::getReader
+     * @uses \Minphp\Configure\Configure
+     * @expectedException \UnexpectedValueException
+     */
+    public function testLoadPathUnexpectedValueException()
+    {
+        // Invalid file extension to load a valid reader
+        $this->loadConfig($this->getFixturePath() . 'Config.xyz');
+    }
 
     /**
      * Data provider for testLoad
@@ -173,5 +197,16 @@ class ConfigureTest extends PHPUnit_Framework_TestCase
                 'subkey2' => null
             )
         );
+    }
+
+    /**
+     * The path to the Fixtures
+     *
+     * @return string The path to the Fixtures
+     */
+    protected function getFixturePath()
+    {
+        return dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Reader'
+            . DIRECTORY_SEPARATOR . 'Fixtures' . DIRECTORY_SEPARATOR;
     }
 }
