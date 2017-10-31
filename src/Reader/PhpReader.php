@@ -34,8 +34,11 @@ class PhpReader implements ReaderInterface
     public function getIterator()
     {
         if (!$this->file->isFile()) {
-            throw new ReaderParseException("Invalid file.");
+            throw new ReaderParseException('Invalid file.');
         }
-        return new ArrayIterator(include $this->file->getPathname());
+
+        // The file must return an array or object
+        $result = include $this->file->getPathname();
+        return new ArrayIterator((is_array($result) || is_object($result) ? $result : array()));
     }
 }
