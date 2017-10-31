@@ -33,9 +33,12 @@ class PhpReaderTest extends PHPUnit_Framework_TestCase
         $file = $this->getFileMock($this->getFixturePath() . "Config.php");
         $reader = new PhpReader($file);
 
-        $result = $reader->getIterator($file);
-        $this->assertInstanceOf('\ArrayIterator', $result);
-        $this->assertEquals("value", $result['key']);
+        // Ensure we can load the same file multiple times and get the same result
+        for ($i = 0; $i < 2; $i++) {
+            $result = $reader->getIterator($file);
+            $this->assertInstanceOf('\ArrayIterator', $result);
+            $this->assertEquals("value", $result['key']);
+        }
     }
 
     /**
