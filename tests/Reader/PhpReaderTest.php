@@ -27,18 +27,44 @@ class PhpReaderTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::getIterator
      * @uses \Minphp\Configure\Reader\PhpReader
+     * @dataProvider getIteratorDataProvider
+     *
+     * @param string $path The path to the file to mock
+     * @param bool $empty True to verify the result is an empty array, or false that it contains a 'key' => 'value' pair
      */
-    public function testGetIterator()
+    public function testGetIterator($path, $empty)
     {
-        $file = $this->getFileMock($this->getFixturePath() . "Config.php");
+        $file = $this->getFileMock($path);
         $reader = new PhpReader($file);
 
         // Ensure we can load the same file multiple times and get the same result
         for ($i = 0; $i < 2; $i++) {
             $result = $reader->getIterator($file);
             $this->assertInstanceOf('\ArrayIterator', $result);
-            $this->assertEquals("value", $result['key']);
+
+            if ($empty === true) {
+                $this->assertEmpty($result);
+            } else {
+                $this->assertEquals("value", $result['key']);
+            }
         }
+    }
+
+    /**
+     * Data Provider for ::testGetIterator
+     */
+    public function getIteratorDataProvider()
+    {
+        $path = $this->getFixturePath();
+        
+        return array(
+            array($path . 'Config.php', false),
+            array($path . 'ConfigObject.php', false),
+            array($path . 'Empty.php', true),
+            array($path . 'EmptyArray.php', true),
+            array($path . 'EmptyNull.php', true),
+            array($path . 'EmptyObject.php', true),
+        );
     }
 
     /**
